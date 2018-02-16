@@ -6,7 +6,8 @@ using namespace std;
 #define max(x, y) (((x) > (y)) ? (x) : (y))
 
 DriveTrain::DriveTrain() : Subsystem("DriveTrain"), left(new TalonSRX(LEFTMOTOR)), right(new TalonSRX(RIGHTMOTOR)),
-							gyro(new ADXRS450_Gyro()) {
+							gyro(new ADXRS450_Gyro())
+{
 
 
 	left->ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative,0,10);

@@ -2,18 +2,18 @@
 #include "../RobotMap.h"
 
 Catcher::Catcher(): Subsystem("Catcher"),
-left(new CANTalon(CATCH_LEFT_CAN_ID)),
-right(new CANTalon(CATCH_RIGHT_CAN_ID))
+catcherLeft(new TalonSRX(CATCH_LEFT_CAN_ID)),
+catcherRight(new TalonSRX(CATCH_RIGHT_CAN_ID))
 {
 	enabled = false;
 }
 
 Catcher::~Catcher()
 {
-	delete left;
-	delete right;
-	left = nullptr;
-	right = nullptr;
+	delete catcherLeft;
+	delete catcherRight;
+	catcherLeft = nullptr;
+	catcherRight = nullptr;
 }
 
 void Catcher::InitDefaultCommand()
@@ -34,21 +34,21 @@ void Catcher::Disable()
 void Catcher::CrateOut()
 {
 	if (enabled)
-		left->Set(-1);
-		right->Set(1);
+		catcherLeft->Set(ControlMode::PercentOutput, -1);
+		catcherRight->Set(ControlMode::PercentOutput, 1);
 }
 
 void Catcher::CrateIn()
 {
     if(enabled)
-    	left->Set(1);
-    	right->Set(-1);
+    	catcherLeft->Set(ControlMode::PercentOutput, 1);
+    	catcherRight->Set(ControlMode::PercentOutput, -1);
 }
 
 void Catcher::Stop()
 {
-	left->Set(0);
-	right->Set(0);
+	catcherLeft->Set(ControlMode::PercentOutput, 0);
+	catcherRight->Set(ControlMode::PercentOutput, 0);
 }
 
 bool Catcher::IsEnabled()
@@ -61,37 +61,49 @@ void Catcher::moveTogether(double speed, Direction catchDirection)
 {
 	enabled = true;
 	if(catchDirection == in)
-		left->Set(speed);
-		right->Set(-speed);
+	{
+		catcherLeft->Set(ControlMode::PercentOutput, speed);
+		catcherRight->Set(ControlMode::PercentOutput, -speed);
+	}
 	if(catchDirection == out)
-		left->Set(-speed);
-		right->Set(speed);
+	{
+		left->Set(ControlMode::PercentOutput, -speed);
+		right->Set(ControlMode::PercentOutput, speed);
+	}
 }
 
 void Catcher::moveLeft(double speed, Direction catchDirection)
 {
 	if (catchDirection == in)
-		left->Set(speed);
+	{
+		left->Set(ControlMode::PercentOutput, speed);
+	}
 	else if (catchDirection == out)
-		left->Set(-speed);
+	{
+		left->Set(ControlMode::PercentOutput, -speed);
+	}
 }
 
 void Catcher::moveRight(double speed, Direction catchDirection)
 {
 	if (catchDirection == in)
-		right->Set(-speed);
+	{
+		right->Set(ControlMode::PercentOutput, -speed);
+	}
 	else if (catchDirection == out)
-		right->Set(speed);
+	{
+		right->Set(ControlMode::PercentOutput, speed);
+	}
 }
 
 double Catcher::getSpeedLeft()
 {
-	return left->GetEncVel();
+	return 1.0;
 }
 
 double Catcher::getSpeedright()
 {
-	return right->GetEncVel();
+	return 1.0;
 }
 // Put methods for controlling this subsystem
 // here. Call these from Commands.
